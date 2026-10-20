@@ -1,0 +1,33 @@
+# Dependências (são reinstaladas com "npm install")
+node_modules/
+
+# Variáveis de ambiente e segredos (NUNCA versionar)
+.env
+.env.*
+!.env.example
+
+# Relatórios e artefatos gerados pelos testes
+**/cypress/videos/
+**/cypress/screenshots/
+**/cypress/reports/
+**/mochawesome-report/
+**/allure-results/
+**/allure-report/
+**/coverage/
+**/k6-results/
+
+# Apps mobile (baixados do repositório da EBAC, não versionar binários)
+Mobile/app/*.apk
+Mobile/app/*.apks
+Mobile/app/*.aab
+Mobile/app/*.app
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operacional e editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
