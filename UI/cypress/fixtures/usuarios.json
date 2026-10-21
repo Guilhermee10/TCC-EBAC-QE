@@ -2,5 +2,13 @@
   "valido": {
     "usuario": "user1_ebac",
     "senha": "psw!ebac@test"
+  },
+  "senhaIncorreta": {
+    "usuario": "user1_ebac",
+    "senha": "senhaErrada123"
+  },
+  "inexistente": {
+    "usuario": "usuario_inexistente_ebac",
+    "senha": "qualquerSenha123"
   }
 }
