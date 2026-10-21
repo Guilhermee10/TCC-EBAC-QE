@@ -1,0 +1,16 @@
+{
+  "name": "tcc-ebac-qe-ui",
+  "version": "1.0.0",
+  "description": "Testes automatizados de UI da EBAC Shop com Cypress",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
+  },
+  "keywords": ["cypress", "e2e", "qa"],
+  "author": "Guilherme de Almeida Santos",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "cypress": "^16.2.0"
+  }
+}
