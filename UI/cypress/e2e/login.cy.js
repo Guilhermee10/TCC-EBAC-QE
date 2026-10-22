@@ -28,7 +28,7 @@ describe('US-0002 - Login na plataforma', () => {
     minhaContaPage.elementos.menu().should('not.exist')
   })
 
-    // BUG-001: a loja informa que o usuário "não está registrado" (enumeração de contas).
+  // BUG-001: a loja informa que o usuário "não está registrado" (enumeração de contas).
   // Reativar (trocar it.skip por it) quando o bug for corrigido.
   it.skip('CT-009 - [BUG-001] Não deve revelar se o usuário existe ao informar usuário inexistente', () => {
     cy.fixture('usuarios').then(({ inexistente }) => {
