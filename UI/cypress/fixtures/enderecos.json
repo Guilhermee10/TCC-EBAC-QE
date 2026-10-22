@@ -1,0 +1,12 @@
+{
+  "faturamento": {
+    "nome": "Guilherme",
+    "sobrenome": "Santos",
+    "pais": "BR",
+    "endereco": "Rua das Flores, 100",
+    "cidade": "Alagoinhas",
+    "estado": "BA",
+    "cep": "48000-000",
+    "telefone": "75999999999"
+  }
+}

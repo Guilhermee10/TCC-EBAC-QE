@@ -8,6 +8,9 @@ class ProdutoPage {
     botaoComprar: () => cy.get('.single_add_to_cart_button'),
     mensagemSucesso: () => cy.get('.woocommerce-message'),
     mensagemErro: () => cy.get('.woocommerce-error'),
+    titulo: () => cy.get('.product_title'),
+    preco: () => cy.get('.summary .price'),
+    descricao: () => cy.get('.woocommerce-product-details__short-description'),
   }
 
   // Usa a busca da loja: quando o resultado é único, o WooCommerce abre direto
