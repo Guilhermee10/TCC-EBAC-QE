@@ -4,13 +4,19 @@
   "description": "Testes automatizados de UI da EBAC Shop com Cypress",
   "scripts": {
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "test": "cypress run"
   },
-  "keywords": ["cypress", "e2e", "qa"],
+  "keywords": [
+    "cypress",
+    "e2e",
+    "qa"
+  ],
   "author": "Guilherme de Almeida Santos",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "cypress": "^16.2.0"
+    "cypress": "^16.2.0",
+    "cypress-mochawesome-reporter": "^5.0.0"
   }
 }
