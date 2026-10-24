@@ -5,10 +5,14 @@ import loginScreen from '../screens/login.screen.js'
 import minhaLojaScreen from '../screens/minhaLoja.screen.js'
 import navegacaoScreen from '../screens/navegacao.screen.js'
 import produtosScreen from '../screens/produtos.screen.js'
+import produtoDetalheScreen from '../screens/produtoDetalhe.screen.js'
 
 describe('US-0004 - Catálogo de produtos (Mobile)', () => {
   before(async () => {
     // Pré-condição: lojista autenticado no app
+    // Produto conhecido da loja (o mesmo da fixture da UI web).
+    // Evita depender do "primeiro da lista", que muda com produtos criados por terceiros.
+    const PRODUTO = 'Abominable Hoodie'
     await inicioScreen.irParaLogin()
     await loginScreen.informarEnderecoDaLoja(process.env.STORE_URL)
     await loginScreen.login(process.env.MOBILE_USER, process.env.MOBILE_PASSWORD)
@@ -30,5 +34,25 @@ describe('US-0004 - Catálogo de produtos (Mobile)', () => {
       const nome = await produtosScreen.nomeDoItem(item).getText()
       expect(nome.trim()).not.toBe('')
     }
+
+    it('CT-024 - Deve exibir os detalhes do produto', async () => {
+      await navegacaoScreen.irParaProdutos()
+      await produtosScreen.aguardarLista()
+      await produtosScreen.abrirProduto(PRODUTO)
+
+      await produtoDetalheScreen.aguardarTela()
+
+      await expect(produtoDetalheScreen.campoNome).toHaveText(PRODUTO)
+
+      const imagens = await produtoDetalheScreen.imagens
+      expect(imagens.length).toBeGreaterThan(0)
+
+      await expect(produtoDetalheScreen.rotuloDescricao).toBeDisplayed()
+      const descricao = await produtoDetalheScreen.descricao.getText()
+      expect(descricao.trim()).not.toBe('')
+
+      // No app do lojista, produto variável mostra as variações (tamanho x cor)
+      await expect(produtoDetalheScreen.rotuloVariacoes).toBeDisplayed()
+    })
   })
 })
