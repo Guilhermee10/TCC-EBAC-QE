@@ -73,3 +73,63 @@ jobs:
         with:
           name: relatorio-ui
           path: UI/cypress/reports/
+  # ---------------------------------------------------------------
+  # Job 3: testes Mobile (Appium + WebdriverIO em emulador Android)
+  # ---------------------------------------------------------------
+  mobile:
+    name: Testes Mobile (Android)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      # Libera a virtualização de hardware (KVM): sem ela o emulador fica lento demais
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Instalar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Mobile/package-lock.json
+
+      - name: Instalar dependências do projeto
+        working-directory: Mobile
+        run: npm ci
+
+      - name: Instalar Appium e driver UiAutomator2
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+
+      # O .apk não fica no nosso repositório: baixamos do repositório oficial da EBAC
+      - name: Baixar o app da EBAC Shop
+        run: |
+          mkdir -p Mobile/app
+          curl -L -o Mobile/app/loja-ebac.apk https://github.com/EBAC-QE/testes-mobile-ebac-shop/raw/main/app/android/loja-ebac.apk
+
+      - name: Executar testes Mobile no emulador Android 11
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          STORE_URL: http://lojaebac.ebaconline.art.br/
+          MOBILE_USER: ${{ secrets.MOBILE_USER }}
+          MOBILE_PASSWORD: ${{ secrets.MOBILE_PASSWORD }}
+        with:
+          api-level: 30 # Android 11, a mesma versão do emulador local
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: cd Mobile && npm test
+
+      - name: Publicar relatório Allure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-mobile
+          path: Mobile/allure-report/

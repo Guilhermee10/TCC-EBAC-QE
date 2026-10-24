@@ -16,6 +16,16 @@ export const config = {
       'appium:automationName': 'UiAutomator2',
       'appium:deviceName': 'nightwatch-android-11',
       'appium:platformVersion': '11',
+      // Só na máquina local: se o emulador não estiver ligado, o Appium liga sozinho.
+      // Na CI (GitHub Actions define CI=true), o emulador é criado pela própria pipeline.
+      ...(process.env.CI
+        ? {}
+        : {
+          'appium:avd': 'nightwatch-android-11',
+          'appium:avdArgs': '-gpu host',
+          'appium:avdLaunchTimeout': 300000,
+          'appium:avdReadyTimeout': 300000,
+        }),
       'appium:app': join(process.cwd(), 'app', 'loja-ebac.apk'),
       'appium:appWaitActivity': 'com.woocommerce.android.ui.login.LoginActivity',
       'appium:autoGrantPermissions': true,
