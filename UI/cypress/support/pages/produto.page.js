@@ -17,11 +17,17 @@ class ProdutoPage {
   // a página do produto. Assim não dependemos do formato da URL de cada produto.
   abrir(nomeProduto) {
     cy.visit(`/?s=${encodeURIComponent(nomeProduto)}&post_type=product`)
+    // Sinal de que o JavaScript de variações da loja terminou de carregar:
+    // ele adiciona esta classe ao botão. Sem isso, o teste pode clicar antes
+    // do script estar pronto (condição de corrida), o que já aconteceu na CI.
+    this.elementos.botaoComprar().should('have.class', 'wc-variation-selection-needed')
   }
 
   selecionarOpcoes(tamanho, cor) {
     this.elementos.opcaoTamanho(tamanho).click()
     this.elementos.opcaoCor(cor).click()
+    // Combinação válida selecionada: o script habilita o botão Comprar
+    this.elementos.botaoComprar().should('not.have.class', 'disabled')
   }
 
   informarQuantidade(quantidade) {
