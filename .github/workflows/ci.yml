@@ -1,0 +1,75 @@
+name: CI - Testes automatizados
+
+# QUANDO a pipeline roda
+on:
+  push:
+    branches: [main] # a cada push na main
+  pull_request:
+    branches: [main] # a cada pull request para a main
+  workflow_dispatch: # botão "Run workflow" para rodar manualmente
+
+jobs:
+  # ---------------------------------------------------------------
+  # Job 1: testes de API (Supertest + Jest)
+  # ---------------------------------------------------------------
+  api:
+    name: Testes de API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: API # todos os comandos rodam dentro da pasta API
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: API/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Executar testes de API
+        run: npm test
+        env:
+          API_USER: ${{ secrets.API_USER }}
+          API_PASSWORD: ${{ secrets.API_PASSWORD }}
+
+      - name: Publicar relatório de API
+        if: always() # publica o relatório mesmo se algum teste falhar
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-api
+          path: API/reports/
+
+  # ---------------------------------------------------------------
+  # Job 2: testes de UI (Cypress)
+  # ---------------------------------------------------------------
+  ui:
+    name: Testes de UI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Action oficial do Cypress: instala dependências (com cache) e roda "cypress run"
+      - name: Executar testes de UI
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: UI
+          browser: chrome
+
+      - name: Publicar relatório de UI
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-ui
+          path: UI/cypress/reports/
