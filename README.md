@@ -37,8 +37,8 @@ teste em [`docs/casos-de-teste.md`](docs/casos-de-teste.md).
 - [x] Estratégia de teste (mapa mental)
 - [x] Critérios de aceitação em Gherkin
 - [x] Casos de teste
-- [ ] Automação de UI
-- [ ] Automação de API
-- [ ] Automação Mobile
-- [ ] Integração contínua (GitHub Actions)
-- [ ] Testes de performance (K6)
+- [x] Automação de UI
+- [x] Automação de API
+- [x] Automação Mobile
+- [x] Integração contínua (GitHub Actions)
+- [x] Testes de performance (K6)
