@@ -24,6 +24,16 @@ class ProdutosScreen {
     return item.$('id:productImageFrame')
   }
 
+  // Rola a lista até encontrar o produto pelo nome e toca nele.
+  // UiScrollable é um recurso nativo do Android: ele mesmo faz a rolagem.
+  // Fica aqui (e não no detalhe) porque é uma ação da tela de LISTA.
+  async abrirProduto(nome) {
+    const produto = await $(
+      `android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("${nome}"))`,
+    )
+    await produto.click()
+  }
+
   async aguardarLista() {
     await this.lista.waitForDisplayed()
   }

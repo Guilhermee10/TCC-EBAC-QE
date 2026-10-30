@@ -6,11 +6,21 @@
 | **História relacionada** | US-0003 — API de cupons |
 | **Caso de teste** | CT-020 — Não deve cadastrar cupom sem campo obrigatório |
 | **Tipo** | Funcional (regra de negócio) / API |
+| **Base da expectativa** | Requisito explícito da US-0003 |
+| **Classificação** | Defeito comprovado |
 | **Severidade** | Média |
 | **Prioridade** | Média |
 | **Ambiente** | `POST http://lojaebac.ebaconline.art.br/wp-json/wc/v3/coupons` |
 | **Detectado por** | Automação de API (Supertest + Jest) |
 | **Status** | Aberto |
+
+## Base do requisito
+
+A obrigatoriedade dos campos está explícita nas regras de negócio da US-0003 (não é uma
+premissa adotada pelo QE):
+
+> "Deve cadastrar os cupons com os campos obrigatórios abaixo: Código do cupom, Valor, Tipo do
+> desconto, Descrição [...] Os outros campos são opcionais."
 
 ## Descrição
 
@@ -43,8 +53,7 @@ deve ser criado.
 
 ## Resultado obtido
 
-Status **201 Created** nos três casos. O cupom é criado com valores padrão (ex.: `amount`
-igual a `"0.00"` e `discount_type` igual a `"fixed_cart"`).
+Status **201 Created** nos três casos: o cupom é criado mesmo sem o campo obrigatório.
 
 | Campo ausente | Esperado | Obtido |
 |---|---|---|
@@ -55,9 +64,9 @@ igual a `"0.00"` e `discount_type` igual a `"fixed_cart"`).
 
 ## Impacto
 
-Cupons incompletos podem ser cadastrados por engano, por exemplo um cupom de valor zero ou
-com tipo de desconto diferente do pretendido (`fixed_cart` no lugar de `fixed_product`),
-afetando campanhas promocionais e o cálculo de descontos.
+Cupons incompletos podem ser cadastrados por engano, sem valor, sem tipo de desconto ou sem
+descrição definidos por quem os criou, afetando campanhas promocionais e o cálculo de
+descontos. Os valores atribuídos pela API aos campos ausentes não foram verificados neste teste.
 
 ## Sugestão de correção
 

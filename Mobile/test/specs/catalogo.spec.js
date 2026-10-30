@@ -8,11 +8,13 @@ import produtosScreen from '../screens/produtos.screen.js'
 import produtoDetalheScreen from '../screens/produtoDetalhe.screen.js'
 
 describe('US-0004 - Catálogo de produtos (Mobile)', () => {
+  // Produto conhecido da loja (o mesmo da fixture da UI web).
+  // Declarado no escopo do describe para ficar acessível a todos os testes.
+  // Evita depender do "primeiro da lista", que muda com produtos criados por terceiros.
+  const PRODUTO = 'Abominable Hoodie'
+
   before(async () => {
     // Pré-condição: lojista autenticado no app
-    // Produto conhecido da loja (o mesmo da fixture da UI web).
-    // Evita depender do "primeiro da lista", que muda com produtos criados por terceiros.
-    const PRODUTO = 'Abominable Hoodie'
     await inicioScreen.irParaLogin()
     await loginScreen.informarEnderecoDaLoja(process.env.STORE_URL)
     await loginScreen.login(process.env.MOBILE_USER, process.env.MOBILE_PASSWORD)
@@ -34,25 +36,26 @@ describe('US-0004 - Catálogo de produtos (Mobile)', () => {
       const nome = await produtosScreen.nomeDoItem(item).getText()
       expect(nome.trim()).not.toBe('')
     }
+  })
 
-    it('CT-024 - Deve exibir os detalhes do produto', async () => {
-      await navegacaoScreen.irParaProdutos()
-      await produtosScreen.aguardarLista()
-      await produtosScreen.abrirProduto(PRODUTO)
+  it('CT-024 - Deve exibir os detalhes do produto', async () => {
+    // Ponto de partida conhecido: não depende de onde o teste anterior parou
+    await navegacaoScreen.irParaProdutos()
+    await produtosScreen.aguardarLista()
+    await produtosScreen.abrirProduto(PRODUTO)
 
-      await produtoDetalheScreen.aguardarTela()
+    await produtoDetalheScreen.aguardarTela()
 
-      await expect(produtoDetalheScreen.campoNome).toHaveText(PRODUTO)
+    await expect(produtoDetalheScreen.campoNome).toHaveText(PRODUTO)
 
-      const imagens = await produtoDetalheScreen.imagens
-      expect(imagens.length).toBeGreaterThan(0)
+    const imagens = await produtoDetalheScreen.imagens
+    expect(imagens.length).toBeGreaterThan(0)
 
-      await expect(produtoDetalheScreen.rotuloDescricao).toBeDisplayed()
-      const descricao = await produtoDetalheScreen.descricao.getText()
-      expect(descricao.trim()).not.toBe('')
+    await expect(produtoDetalheScreen.rotuloDescricao).toBeDisplayed()
+    const descricao = await produtoDetalheScreen.descricao.getText()
+    expect(descricao.trim()).not.toBe('')
 
-      // No app do lojista, produto variável mostra as variações (tamanho x cor)
-      await expect(produtoDetalheScreen.rotuloVariacoes).toBeDisplayed()
-    })
+    // No app do lojista, produto variável mostra as variações (tamanho x cor)
+    await expect(produtoDetalheScreen.rotuloVariacoes).toBeDisplayed()
   })
 })

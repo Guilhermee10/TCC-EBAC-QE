@@ -6,6 +6,8 @@
 | **História relacionada** | US-0002 — Login na plataforma |
 | **Caso de teste** | CT-009 — Não deve revelar se o usuário existe |
 | **Tipo** | Segurança (enumeração de contas) |
+| **Base da expectativa** | Premissa de segurança adotada pelo QE (OWASP); não consta nas regras da US-0002 |
+| **Classificação** | Achado de segurança, a validar com o PO |
 | **Severidade** | Média |
 | **Prioridade** | Média |
 | **Ambiente** | http://lojaebac.ebaconline.art.br — Chrome — Windows |
@@ -18,6 +20,13 @@ Ao tentar fazer login com um usuário que não existe, a loja exibe uma mensagem
 que o usuário **não está registrado**. Já para um usuário existente com senha incorreta, a
 mensagem é diferente. Comparando as duas respostas, qualquer pessoa consegue descobrir quais
 usuários estão cadastrados na plataforma.
+
+## Observação sobre a classificação
+
+A US-0002 exige apenas que seja exibida "uma mensagem de erro" quando o login falha; ela não
+determina que a mensagem seja genérica. A expectativa deste relatório vem de uma premissa de
+segurança baseada na OWASP. Por isso, o item é registrado como achado a ser validado com o PO,
+e não como violação de um requisito documentado.
 
 ## Pré-condições
 

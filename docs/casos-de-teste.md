@@ -144,14 +144,33 @@
 
 ## Resumo
 
-| US | Total | ✅ Automatizado | 🔜 Candidato | ❌ Manual |
-|---|---|---|---|---|
-| US-0001 Carrinho | 6 | 4 | 0 | 2 |
-| US-0002 Login | 7 | 4 | 0 | 3 |
-| US-0003 API de cupons | 9 | 9 | 0 | 0 |
-| US-0004 Catálogo | 7 | 4 (UI) + 2 (Mobile) | 2 | 1 |
-| US-0005 Minha Conta | 4 | 2 | 2 | 0 |
-| US-0006 Meus pedidos | 4 | 1 | 0 | 3 |
-| US-0007 Endereços | 4 | 2 | 2 | 0 |
-| US-0008 Detalhes da conta | 4 | 2 | 1 | 1 |
-| **Total** | **45** | **30** | **7** | **8** |
+Os casos CT-023 e CT-024 foram automatizados na Web **e** no Mobile. Por isso, os **28 casos
+distintos** automatizados correspondem a **30 implementações** (19 UI, 9 API e 2 Mobile).
+
+| US | Casos | ✅ Automatizados (casos distintos) | Implementações | 🔜 Candidatos | ❌ Manuais |
+|---|---|---|---|---|---|
+| US-0001 Carrinho | 6 | 4 | 4 UI | 0 | 2 |
+| US-0002 Login | 7 | 4 | 4 UI | 0 | 3 |
+| US-0003 API de cupons | 9 | 9 | 9 API | 0 | 0 |
+| US-0004 Catálogo | 7 | 4 | 4 UI + 2 Mobile | 2 | 1 |
+| US-0005 Minha Conta | 4 | 2 | 2 UI | 2 | 0 |
+| US-0006 Meus pedidos | 4 | 1 | 1 UI | 0 | 3 |
+| US-0007 Endereços | 4 | 2 | 2 UI | 2 | 0 |
+| US-0008 Detalhes da conta | 4 | 2 | 2 UI | 1 | 1 |
+| **Total** | **45** | **28** | **30** | **7** | **10** |
+
+## Execução (implementado × executado)
+
+Testes que revelaram divergências foram mantidos no código e marcados como `skip`. Alguns casos
+rodam com várias entradas (testes orientados a dados), por isso há mais testes do que casos.
+
+| Camada | Casos cobertos | Testes implementados | Executados e aprovados | Em skip | Falhas |
+|---|---|---|---|---|---|
+| UI (Cypress) | 19 | 24 | 22 | 2 (CT-003, CT-009) | 0 |
+| API (Supertest) | 9 | 12 | 9 | 3 (variações do CT-020) | 0 |
+| Mobile (Appium) | 2 + teste de fumaça | 3 | 3 | 0 | 0 |
+| **Total** | **30 implementações** | **39** | **34** | **5** | **0** |
+
+Por caso distinto: CT-003 e CT-009 estão inteiramente em `skip` e o CT-020 roda parcialmente
+(apenas a variação sem `code`). Assim, **26 dos 28 casos automatizados** têm ao menos uma
+verificação executada e aprovada.

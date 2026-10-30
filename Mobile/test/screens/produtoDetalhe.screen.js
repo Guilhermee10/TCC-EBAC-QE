@@ -30,14 +30,6 @@ class ProdutoDetalheScreen {
   get rotuloVariacoes() {
     return $('android=new UiSelector().text("Variations")')
   }
-  // Rola a lista até encontrar o produto pelo nome e toca nele.
-  // UiScrollable é um recurso nativo do Android: ele mesmo faz a rolagem.
-  async abrirProduto(nome) {
-    const produto = await $(
-      `android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("${nome}"))`,
-    )
-    await produto.click()
-  }
 
   async aguardarTela() {
     await this.tela.waitForDisplayed()

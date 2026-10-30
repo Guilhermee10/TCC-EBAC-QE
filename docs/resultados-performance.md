@@ -39,21 +39,30 @@ Evidências: `relatorios/k6-login.png` e `relatorios/k6-catalogo.png`.
 
 ## Análise
 
-1. **Degradação sob carga.** O menor tempo de resposta (~190–200 ms) representa o servidor
-   praticamente sem concorrência, no início do ramp-up. Com 20 VUs simultâneos, a mediana
-   passou para ~3,4–3,6 s, cerca de **17 a 18 vezes mais lenta**. O sistema não escala bem para
-   essa quantidade de usuários.
-2. **Saturação.** Com 20 VUs, a vazão ficou em apenas ~4,5–4,7 requisições por segundo. Como os
-   VUs passam a maior parte do tempo esperando respostas, o gargalo está no servidor, e não no
-   gerador de carga.
-3. **O login é o fluxo mais crítico.** A taxa de erro do login (17,08%) foi mais de 3 vezes maior
-   que a do catálogo (5,05%). Isso é coerente com o custo de cada operação: o login verifica a
-   senha (operação propositalmente cara), consulta o banco e cria sessão, enquanto o catálogo é
-   majoritariamente leitura. Inclusive a própria abertura da página de login falhou em 18% das
-   vezes.
-4. **Falhas sob carga.** As falhas indicam que o servidor passou a recusar ou não completar parte
-   das requisições. Como próximo passo de investigação, recomenda-se registrar a distribuição dos
-   códigos de status HTTP das falhas (ex.: 5xx, 429 ou timeouts) para identificar a causa.
+### O que os resultados comprovam
+
+Nas condições desta execução, os dois fluxos violaram os três critérios adotados (p(95) do tempo
+de resposta, taxa de falhas e checks), e o login teve taxa de falhas maior que a do catálogo
+(17,08% contra 5,05%).
+
+### Hipóteses a investigar
+
+O resumo agregado do K6 mostra estatísticas da execução inteira, mas não informa **quando** cada
+requisição ocorreu nem o estado do servidor. As explicações abaixo são hipóteses, não conclusões:
+
+1. **Degradação com o aumento da concorrência.** A diferença entre o mínimo (~190–200 ms) e a
+   mediana (~3,4–3,6 s) sugere que os menores tempos ocorreram com poucos usuários, possivelmente
+   no início do ramp-up. **Como confirmar:** analisar a série temporal do painel do K6 (relatório
+   HTML), relacionando tempo de resposta e número de VUs ao longo do teste.
+2. **Possível saturação do servidor.** A vazão de ~4,5–4,7 req/s com 20 VUs é compatível com
+   saturação, mas também com latência de rede, limitação de requisições (rate limiting) ou carga
+   de outros usuários do ambiente compartilhado. **Como confirmar:** métricas do servidor (CPU,
+   memória, processos PHP, banco de dados) e execuções com cargas crescentes (5, 10 e 20 VUs) para
+   verificar se a vazão para de crescer.
+3. **Causa da maior taxa de falhas no login.** Uma hipótese é o custo maior da operação
+   (verificação de senha, consulta ao banco e criação de sessão) em relação ao catálogo, que faz
+   basicamente leituras. **Como confirmar:** registrar a distribuição dos códigos de status das
+   falhas (5xx, 429 ou tempo esgotado).
 
 ## Limitações do teste
 
@@ -66,7 +75,7 @@ Evidências: `relatorios/k6-login.png` e `relatorios/k6-catalogo.png`.
 
 ## Conclusão
 
-Com 20 usuários simultâneos, a EBAC Shop **não atende** aos critérios de desempenho adotados nos dois
-fluxos avaliados, sendo o **login** o ponto mais crítico. Recomenda-se investigar a capacidade do
-servidor e avaliar otimizações como cache de páginas para o catálogo e ajuste de recursos (CPU,
-memória e workers do PHP) antes de um aumento de tráfego real.
+Nas condições desta execução, a EBAC Shop **não atendeu** aos critérios de desempenho adotados nos
+dois fluxos avaliados. Identificar a causa exige investigar as hipóteses acima, preferencialmente
+em um ambiente dedicado (ex.: a loja executada em Docker), onde a carga de terceiros não interfere
+e as métricas do servidor podem ser coletadas.
