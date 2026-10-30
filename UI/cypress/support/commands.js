@@ -21,7 +21,13 @@ Cypress.Commands.add('cadastrarUsuario', () => {
     cy.get('#reg_email').type(email)
     cy.get('#reg_password').type(senha, { log: false })
     cy.get('[name="register"]').click()
-    minhaContaPage.elementos.menu().should('be.visible')
+    // Espera o painel OU uma mensagem de erro da loja, o que aparecer primeiro.
+    // Se a loja recusar o cadastro, o teste falha mostrando o motivo.
+    cy.get('.woocommerce-MyAccount-navigation, .woocommerce-error').then(($el) => {
+        if ($el.hasClass('woocommerce-error')) {
+            throw new Error(`A loja recusou o cadastro: ${$el.text().trim()}`)
+        }
+    })
 
     return cy.wrap({ email, senha })
 })
